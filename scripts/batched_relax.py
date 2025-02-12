@@ -222,7 +222,9 @@ def relax(id, atoms_q, done_q, pipe, cutoff, filter_cls, optim_cls):
         atoms = filter_cls(atoms)
         optim = optim_cls(atoms, logfile="/dev/null")
         optim.run(FMAX, MAX_STEP)
-        done_q.put(atoms.atoms)
+        done_q.put(atoms.atoms.copy())  # TODO: I hate Filter impl
+        del optim
+        del atoms
 
 
 def calc_proc(pipe_list, **calc_kwargs):
